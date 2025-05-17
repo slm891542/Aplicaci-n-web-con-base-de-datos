@@ -1,16 +1,17 @@
 FROM php:8.2-cli
 
-# Instala extensiones necesarias (como pdo_pgsql para PostgreSQL)
-RUN docker-php-ext-install pdo pdo_pgsql
+# Instalar dependencias necesarias para PostgreSQL
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql
 
-# Copia los archivos al contenedor
+# Copiar archivos del proyecto
 COPY . /var/www/html
 
-# Establece el directorio de trabajo
 WORKDIR /var/www/html
 
-# Expone el puerto 8080
+# Exponer puerto para Railway
 EXPOSE 8080
 
-# Instala servidor web embebido de PHP
-CMD [ "php", "-S", "0.0.0.0:8080", "-t", "." ]
+# Comando para iniciar servidor embebido de PHP
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "."]
